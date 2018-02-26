@@ -1,0 +1,112 @@
+<h2>Show Task</h2>
+<script>
+ window.block_path = "<%= block_path(@conn, :index) %>"
+ window.userHomePage = "<%= user_path(@conn, :show, @current_user) %>"
+</script>
+
+<div class="row">
+  <ul>
+    <li>
+      <strong>Task Name:</strong>
+      <%= @post.name %>
+    </li>
+
+    <li>
+      <strong>Assigned To:</strong>
+      <%= Tasks2.Accounts.get_user!(@post.user_id).name %>
+    </li>
+
+    <li>
+      <strong>Is the task complete:</strong>
+      <%= @post.completed %>
+    </li>
+
+    <li>
+      <strong>Discription:</strong>
+      <%= @post.body %>
+    </li>
+<%= if @block do %>
+    <li>
+      <strong>Start Time:</strong>
+      <%= @block.start %>
+    </li>
+
+    <li>
+      <strong>End Time:</strong>
+      <%= @block.end %>
+    </li>
+    <% else %>
+    <li>
+      <strong>Start Time:</strong>
+      <%= Tasks2.Accounts.get_user!(@post.user_id).name %> Hasn't started the task yet.
+    </li>
+
+    <li>
+      <strong>End Time:</strong>
+        <%= Tasks2.Accounts.get_user!(@post.user_id).name %> Hasn't started the task yet.
+    </li>
+<% end %>
+  </ul>
+</div>
+<%= if @current_user.id == @user.id do %>
+<button class="start-button btn btn-secondary" value = "Start Working" data-post-id="<%= @post.id %>" data-toggle="start">
+  Start Working
+</button>
+<div>
+    <%= if @block do %>
+    Edit Your Time Block
+    <%= form_for @changeset, block_path(@conn, :update, @block),  fn f -> %>
+    <div class="form-group">
+      Task Id = <%= @post.id %>
+      <%= text_input f, :post_id, value: @post.id, hidden: true  %>
+      <%= error_tag f, :post_id %>
+    </div>
+    Select Start Date<br>
+    <div class="form-group">
+      <%= select f, :start_day, [options: 1..31], value: @start_time.day() %> / <%= select f, :start_month, [options: 1..12], value: @start_time.month() %> / <%= select f, :start_year, [options: 2017..2018], value: @start_time.year() %> &nbsp;&nbsp;
+      <%= select f, :start_hour, [options: 0..23], value: @start_time.hour() %> : <%= select f, :start_minute, [options: 0..59], value: @start_time.minute() %> : <%= select f, :start_second, [options: 0..59], value: @start_time.second() %>
+      <%= error_tag f, :start %>
+    </div>
+
+    Select End Date<br>
+    <div class="form-group">
+      <%= select f, :end_day, [options: 1..31], value: @end_time.day() %> / <%= select f, :end_month, [options: 1..12], value: @end_time.month() %> / <%= select f, :end_year, [options: 2017..2018], value: @end_time.year() %> &nbsp;&nbsp;
+      <%= select f, :end_hour, [options: 0..23], value: @end_time.hour() %> : <%= select f, :end_minute, [options: 0..59], value: @end_time.minute() %> : <%= select f, :end_second, [options: 0..59], value: @end_time.second() %>
+      <%= error_tag f, :end %>
+    </div>
+
+    <div class="form-group">
+      <%= submit "Update", class: "btn btn-primary" %>
+    </div>
+    <% end %>
+    <span><%= link "Delete", to: block_path(@conn, :delete, @block), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+    <% else %>
+      Create New Time Block
+      <%= form_for @conn, block_path(@conn, :create), fn f -> %>
+      <div class="form-group">
+        Task Id = <%= @post.id %>
+        <%= text_input f, :post_id, value: @post.id, hidden: true  %>
+        <%= error_tag f, :post_id %>
+      </div>
+      Select Start Date<br>
+      <div class="form-group">
+        <%= select f, :start_day, [options: 1..31] %> / <%= select f, :start_month, [options: 1..12] %> / <%= select f, :start_year, [options: 2017..2018] %> &nbsp;&nbsp;
+        <%= select f, :start_hour, [options: 0..23] %> : <%= select f, :start_minute, [options: 0..59] %> : <%= select f, :start_second, [options: 0..59] %>
+        <%= error_tag f, :start %>
+      </div>
+
+      Select End Date<br>
+      <div class="form-group">
+        <%= select f, :end_day, [options: 1..31] %> / <%= select f, :end_month, [options: 1..12] %> / <%= select f, :end_year, [options: 2017..2018] %> &nbsp;&nbsp;
+        <%= select f, :end_hour, [options: 0..23] %> : <%= select f, :end_minute, [options: 0..59] %> : <%= select f, :end_second, [options: 0..59] %>
+        <%= error_tag f, :end %>
+      </div>
+
+      <div class="form-group">
+        <%= submit "Create", class: "btn btn-primary" %>
+      </div>
+      <% end %>
+    <% end %>
+</div>
+  <% end %>
+<span><%= link "Back", to: user_path(@conn, :show, @current_user) %></span>

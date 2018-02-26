@@ -1,0 +1,98 @@
+<h2>Hello <%=@user.name%>!</h2>
+Your Details
+<ul>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @user.name %>
+  </li>
+
+  <li>
+    <strong>Manager:</strong>
+    <%= if length(@manager) == 0 do %>
+      You don't have a manager assigned to you yet | <%= link "Select Manager", to: manage_path(@conn, :new) %>
+    <%= else %>
+      <%= for manager <- @manager do %>
+      <%= Tasks2.Accounts.get_user!(manager.manager_id).name %> | <%= link "Change Manager", to: manage_path(@conn, :edit, manager) %>
+      <%= end %>
+    <% end %>
+  </li>
+
+  <li>
+    <strong>Underlings:</strong>
+    <%= for underling <- @underlings do %>
+    <%= underling.name %>, &nbsp;
+    <%= end %>
+  </li>
+
+
+
+</ul>
+
+<span><%= link "New Task", to: post_path(@conn, :new) %></span><br>
+Your Tasks
+<table class="table">
+  <thead>
+    <tr>
+      <th>Task Name</th>
+      <th>Completed?</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+
+    </tr>
+  </thead>
+  <tbody>
+<%= for post <- @post do %>
+    <tr>
+      <td><%= post.name %></td>
+      <td><%= post.completed %></td>
+      <%= if Tasks2.Time.get_block_by_post(post.id) do %>
+        <td><%= NaiveDateTime.truncate(Tasks2.Time.get_block_by_post(post.id).start, :second) %></td>
+        <td><%= NaiveDateTime.truncate(Tasks2.Time.get_block_by_post(post.id).end, :second) %></td>
+        <% else %>
+        <td></td>
+        <td></td>
+        <% end %>
+      <td class="text-right">
+        <span><%= link "Show", to: post_path(@conn, :show, post), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: post_path(@conn, :edit, post), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: post_path(@conn, :delete, post), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<%= end %>
+</tbody>
+</table>
+The tasks assigned to your subordinates:
+<div class="row">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Task Name</th>
+        <th>Completed?</th>
+        <th>Assigned To</th>
+      </tr>
+    </thead>
+    <tbody>
+  <%= for post <- @underling_posts do %>
+      <tr>
+        <td><%= post.name %></td>
+        <td><%= post.completed %></td>
+        <td><%= Tasks2.Accounts.get_user!(post.user_id).name %></td>
+
+        <td class="text-right">
+          <span><%= link "Task Report", to: post_path(@conn, :show, post), class: "btn btn-default btn-xs" %></span>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+  </table>
+</div>
+
+<span><%= link "Edit profile", to: user_path(@conn, :edit, @user) %></span><br>
+<span><%= link "Delete Profile", to: user_path(@conn, :delete, @user), method: :delete, data: [confirm: "Are you sure?"]%></span><br>
+<li><%= link "Log out", to: session_path(@conn, :delete), method: :delete %></li>

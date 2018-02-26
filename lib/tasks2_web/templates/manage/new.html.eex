@@ -1,0 +1,5 @@
+
+
+<%= render "form.html", Map.put(assigns, :action, manage_path(@conn, :create)) %>
+
+<span><%= link "Back", to: user_path(@conn, :show, @current_user) %></span>
