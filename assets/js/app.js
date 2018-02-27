@@ -41,7 +41,7 @@ function start(post_id) {
     sessionStorage.setItem('to', current_time)
 }
 
-function end(post_id, time) {
+function end(post_id, time_id) {
   let current_time = new Date();
   let endSecond = current_time.getSeconds();
   let endMinute = current_time.getMinutes();
@@ -71,8 +71,21 @@ function end(post_id, time) {
         start_month: startMonth,
         start_year: startYear
   });
-  $.ajax(block_path, {
-    method: "POST",
+  if (time_id == "")
+  {
+      $.ajax(block_path, {
+      method: "POST",
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: text,
+    });
+    set_button(post_id, "start");
+    alert("Time Block Set!");
+    window.location.replace(userHomePage);
+  }
+  else {
+    $.ajax(block_path, {
+    method: "PUT",
     dataType: "json",
     contentType: "application/json; charset=UTF-8",
     data: text,
@@ -80,6 +93,7 @@ function end(post_id, time) {
   set_button(post_id, "start");
   alert("Time Block Set!");
   window.location.replace(userHomePage);
+  }
 }
 
 
@@ -87,10 +101,11 @@ function start_click(ev) {
   let btn = $(ev.target);
   let toggle = btn.data('toggle');
   let post_id = btn.data('post-id');
+  let time_id = btn.data('time-id');
   if (toggle == "start")
     start(post_id);
   else
-    end(post_id);
+    end(post_id, time_id);
 }
 function init() {
   if (!$('.start-button')) {

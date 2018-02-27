@@ -1,6 +1,7 @@
 <h2>Show Task</h2>
 <script>
  window.block_path = "<%= block_path(@conn, :index) %>"
+ window.update_path = "<%= if Tasks2.Time.get_block_by_post(@post.id) do block_path(@conn, :update, @block) end %>"
  window.userHomePage = "<%= user_path(@conn, :show, @current_user) %>"
 </script>
 
@@ -49,7 +50,13 @@
   </ul>
 </div>
 <%= if @current_user.id == @user.id do %>
-<button class="start-button btn btn-secondary" value = "Start Working" data-post-id="<%= @post.id %>" data-toggle="start">
+<button class="start-button btn btn-secondary" value = "Start Working" data-post-id="<%= @post.id %>" data-toggle="start"
+  data-time-id="<%= if Tasks2.Time.get_block_by_post(@post.id) do
+      Tasks2.Time.get_block_by_post(@post.id).id
+    else
+      nil
+    end
+   %>">
   Start Working
 </button>
 <div>
