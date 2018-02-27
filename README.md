@@ -1,5 +1,10 @@
 # Tasks2
 
+Design Choices:
+
+1. Each user/manager can assign tasks to themself. 
+Any user in the system will be allowed to assign a task to themself. If this were not the case, and if there were only a single user in the system, e.g. the first user in the system, then the user won't be assigned any tasks and would be idle, unless some other user registers as their manager.
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
