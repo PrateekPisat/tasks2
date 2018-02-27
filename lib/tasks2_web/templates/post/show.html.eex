@@ -29,12 +29,12 @@
 <%= if @block do %>
     <li>
       <strong>Start Time:</strong>
-      <%= @block.start %>
+      <%= NaiveDateTime.truncate(@block.start, :second) %>
     </li>
 
     <li>
       <strong>End Time:</strong>
-      <%= @block.end %>
+      <%= NaiveDateTime.truncate(@block.end, :second) %>
     </li>
     <% else %>
     <li>
@@ -73,6 +73,9 @@
       <%= select f, :start_day, [options: 1..31], value: @start_time.day() %> / <%= select f, :start_month, [options: 1..12], value: @start_time.month() %> / <%= select f, :start_year, [options: 2017..2018], value: @start_time.year() %> &nbsp;&nbsp;
       <%= select f, :start_hour, [options: 0..23], value: @start_time.hour() %> : <%= select f, :start_minute, [options: 0..59], value: @start_time.minute() %> : <%= select f, :start_second, [options: 0..59], value: @start_time.second() %>
       <%= error_tag f, :start %>
+      <small class="form-text text-muted">
+        (DD/MM/YYYY  HH:MM:SS)
+      </small>
     </div>
 
     Select End Date<br>
@@ -80,6 +83,9 @@
       <%= select f, :end_day, [options: 1..31], value: @end_time.day() %> / <%= select f, :end_month, [options: 1..12], value: @end_time.month() %> / <%= select f, :end_year, [options: 2017..2018], value: @end_time.year() %> &nbsp;&nbsp;
       <%= select f, :end_hour, [options: 0..23], value: @end_time.hour() %> : <%= select f, :end_minute, [options: 0..59], value: @end_time.minute() %> : <%= select f, :end_second, [options: 0..59], value: @end_time.second() %>
       <%= error_tag f, :end %>
+      <small class="form-text text-muted">
+        (DD/MM/YYYY  HH:MM:SS)
+      </small>
     </div>
 
     <div class="form-group">

@@ -27,12 +27,12 @@ defmodule Tasks2Web.BlockController do
     zone_abbr: "AMT", time_zone: "America/Manaus",  utc_offset: -14400,
     std_offset: 0} |> DateTime.to_naive() |> NaiveDateTime.truncate(:second)
     post = Tasks2.Social.get_post!(post_id)
-    with {:ok, %Block{} = block} <- Time.create_block(%{post_id: post_id,
-    start: start, end: end_time}) do
-      conn
-      |> put_flash(:info, "block_created")
-      |> redirect(to: user_path(conn, :show, get_session(conn, :user_id) |> Tasks2.Accounts.get_user!()))
-    end
+      with {:ok, %Block{} = block} <- Time.create_block(%{post_id: post_id,
+      start: start, end: end_time}) do
+        conn
+        |> put_flash(:info, "block_created")
+        |> redirect(to: user_path(conn, :show, get_session(conn, :user_id) |> Tasks2.Accounts.get_user!()))
+      end
   end
 
   def show(conn, %{"id" => id}) do
@@ -45,11 +45,11 @@ defmodule Tasks2Web.BlockController do
     start = %DateTime{year: start_year, month: start_month, day: start_day, hour: start_hour, minute: start_minute, second: start_second, zone_abbr: "AMT", time_zone: "America/Manaus",  utc_offset: -14400, std_offset: 0} |> DateTime.to_naive() |> NaiveDateTime.truncate(:second)
     end_time = %DateTime{year: end_year, month: end_month, day: end_day, hour: end_hour, minute: end_minute, second: end_second, zone_abbr: "AMT", time_zone: "America/Manaus",  utc_offset: -14400, std_offset: 0} |> DateTime.to_naive() |> NaiveDateTime.truncate(:second)
     post = Tasks2.Social.get_post!(post_id)
-    with {:ok, %Block{} = block} <- Time.update_block(block, %{post_id: post_id,start: start, end: end_time}) do
-      conn
-      |> put_flash(:info, "block updated")
-      |> redirect(to: user_path(conn, :show, get_session(conn, :user_id) |> Tasks2.Accounts.get_user!()))
-    end
+      with {:ok, %Block{} = block} <- Time.update_block(block, %{post_id: post_id,start: start, end: end_time}) do
+        conn
+        |> put_flash(:info, "block updated")
+        |> redirect(to: user_path(conn, :show, get_session(conn, :user_id) |> Tasks2.Accounts.get_user!()))
+      end
   end
 
   def delete(conn, %{"id" => id}) do
