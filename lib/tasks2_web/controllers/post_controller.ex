@@ -14,7 +14,10 @@ defmodule Tasks2Web.PostController do
 
   def new(conn, _params) do
     user = Tasks2.Accounts.get_user!(get_session(conn, :user_id))
-    users = get_users(Accounts.get_underlings(get_session(conn, :user_id)), []) ++ [user]
+    users = get_users(Accounts.get_underlings(get_session(conn, :user_id)), [])
+    if Accounts.get_user!(Accounts.get_manager!(user.id).manager_id) == user do
+      users = users ++ [user]
+    end
     changeset = Social.change_post(%Post{})
     render(conn, "new.html", changeset: changeset, users: users, current_user: user = Tasks2.Accounts.get_user!(get_session(conn, :user_id)))
   end

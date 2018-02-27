@@ -14,12 +14,10 @@ Your Details
 
   <li>
     <strong>Manager:</strong>
-    <%= if length(@manager) == 0 do %>
+    <%= if !@manager do %>
       You don't have a manager assigned to you yet | <%= link "Select Manager", to: manage_path(@conn, :new) %>
     <%= else %>
-      <%= for manager <- @manager do %>
-      <%= Tasks2.Accounts.get_user!(manager.manager_id).name %> | <%= link "Change Manager", to: manage_path(@conn, :edit, manager) %>
-      <%= end %>
+      <%= Tasks2.Accounts.get_user!(@manager.manager_id).name %> | <%= link "Change Manager", to: manage_path(@conn, :edit, @manager) %>
     <% end %>
   </li>
 

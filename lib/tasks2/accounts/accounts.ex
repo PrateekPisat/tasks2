@@ -140,7 +140,7 @@ def get_manage!(id), do: Repo.get!(Manage, id)
 
   def get_manager!(id) do
     query = from m in Manage, where: m.underling_id == ^id
-    Repo.all(query)
+    Repo.one(query)
   end
 
   def get_underlings(id) do
