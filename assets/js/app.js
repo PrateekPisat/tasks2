@@ -84,11 +84,27 @@ function end(post_id, time_id) {
     window.location.replace(userHomePage);
   }
   else {
-    $.ajax(block_path, {
+    let update_text = JSON.stringify({
+        id: time_id,
+        block:{  post_id: post_id,
+          end_second: endSecond,
+          end_minute: endMinute,
+          end_hour: endHour,
+          end_day: endDay,
+          end_month: endMonth,
+          end_year: endYear,
+          start_second: startSecond,
+          start_minute: startMinute,
+          start_hour: startHour,
+          start_day: startDay,
+          start_month: startMonth,
+          start_year: startYear }
+    });
+    $.ajax(update_path, {
     method: "PUT",
     dataType: "json",
     contentType: "application/json; charset=UTF-8",
-    data: text,
+    data: update_text,
   });
   set_button(post_id, "start");
   alert("Time Block Set!");
